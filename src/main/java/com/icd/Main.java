@@ -40,11 +40,7 @@ public class Main {
             Path outputPath = Paths.get("output", "20230102-22164649-dasher06-mydashboard-false.pdf");
             final PdfWriter instance = PdfWriter.getInstance(document, Files.newOutputStream(outputPath));
 
-            // various fonts
-            BaseFont bf_helv = BaseFont.createFont(BaseFont.HELVETICA, "Cp1252", false);
-            BaseFont bf_times = BaseFont.createFont(BaseFont.TIMES_ROMAN, "Cp1252", false);
-            BaseFont bf_courier = BaseFont.createFont(BaseFont.COURIER, "Cp1252", false);
-            BaseFont bf_symbol = BaseFont.createFont(BaseFont.SYMBOL, "Cp1252", false);
+            BaseFont bf_helv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
 
             // headers and footers must be added before the document is opened
 
