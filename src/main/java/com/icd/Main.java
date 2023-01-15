@@ -1,11 +1,17 @@
 package com.icd;
 
 import com.lowagie.text.*;
+import com.lowagie.text.Font;
+import com.lowagie.text.Image;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.alignment.HorizontalAlignment;
+import com.lowagie.text.alignment.VerticalAlignment;
 import com.lowagie.text.pdf.BaseFont;
 import com.lowagie.text.pdf.PdfName;
 import com.lowagie.text.pdf.PdfString;
 import com.lowagie.text.pdf.PdfWriter;
 
+import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,24 +50,67 @@ public class Main {
 
             Path inputPathLogo = Paths.get("input", "icd-logo.png");
             Image logo = Image.getInstance(inputPathLogo.toString());
-            logo.scalePercent(5);
+            logo.scalePercent(3);
             Chunk logoChunk = new Chunk(logo, 0f, 0f);
-            Phrase logoPhrase = new Phrase(logoChunk);
-            Phrase words = new Phrase("2023-01-02 22:16:46.49 dasher06-mydashboard-false", new Font(bf_helv));
+            Phrase logoPhrase = new Phrase(0, logoChunk);
+            Phrase words1 = new Phrase(0, "My Dashboard dada", new Font(bf_helv, 10));
+            Phrase words2 = new Phrase(0, "Created on 15-Jan-2023 12:11 PM NY / 05:11 PM UK", new Font(bf_helv, 8));
 
-            Phrase headerPhrase = new Phrase();
-            headerPhrase.add(logoPhrase);
-            headerPhrase.add(words);
+            Cell leftCell = new Cell(logoPhrase);
+            leftCell.setHorizontalAlignment(HorizontalAlignment.LEFT);
+            leftCell.setVerticalAlignment(VerticalAlignment.CENTER);
+            leftCell.setBorderWidth(0);
+            leftCell.setBorder(0);
+//            leftCell.setBackgroundColor(Color.CYAN);
+//            leftCell.disableBorderSide(Cell.LEFT);
+//            leftCell.disableBorderSide(Cell.RIGHT);
+//            leftCell.disableBorderSide(Cell.TOP);
+//            leftCell.disableBorderSide(Cell.BOTTOM);
+            leftCell.setBorderWidth(0);
+
+            Cell midCell = new Cell(words1);
+            midCell.setHorizontalAlignment(HorizontalAlignment.CENTER);
+//            midCell.setBackgroundColor(Color.LIGHT_GRAY);
+            midCell.setVerticalAlignment(VerticalAlignment.CENTER);
+//            midCell.disableBorderSide(Cell.LEFT);
+//            midCell.disableBorderSide(Cell.RIGHT);
+//            midCell.disableBorderSide(Cell.TOP);
+//            midCell.disableBorderSide(Cell.BOTTOM);
+            midCell.setBorderWidth(0);
+
+            Cell rightCell = new Cell(words2);
+            rightCell.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+//            rightCell.setBackgroundColor(Color.YELLOW);
+            rightCell.setVerticalAlignment(VerticalAlignment.CENTER);
+//            rightCell.setBorderWidth(0);
+            rightCell.setBorderWidth(0);
+
+            Table table = new Table(3, 1);
+            table.setTableFitsPage(true);
+            table.setBorder(0);
+            table.setPadding(0);
+            table.setSpacing(0);
+            table.setOffset(0);
+            table.setWidth(100);
+            table.setWidths(new int[]{33,33,34});
+            table.addCell(leftCell, new Point(0,0));
+            table.addCell(midCell, new Point(0,1));
+            table.addCell(rightCell, new Point(0,2));
+
+            Phrase headerPhrase = new Phrase(0);
+            headerPhrase.add(table);
 
             HeaderFooter header = new HeaderFooter(headerPhrase, false);
+            header.setBorder(Rectangle.NO_BORDER);
             header.setAlignment(Element.ALIGN_CENTER);
+            header.setBorderWidthBottom(0);
             document.setHeader(header);
 
-            HeaderFooter footer = new HeaderFooter(
-                    new Phrase("page: ", new Font(bf_helv)), true);
-            footer.setBorder(Rectangle.NO_BORDER);
-            footer.setAlignment(Element.ALIGN_CENTER);
-            document.setFooter(footer);
+//            HeaderFooter footer = new HeaderFooter(
+//                    new Phrase("page: ", new Font(bf_helv)), true);
+//            footer.setBorder(Rectangle.NO_BORDER);
+//            footer.setAlignment(Element.ALIGN_CENTER);
+//            document.setFooter(footer);
 
 
             document.open();
