@@ -54,7 +54,7 @@ public class Main {
             Chunk logoChunk = new Chunk(logo, 0f, 0f);
             Phrase logoPhrase = new Phrase(0, logoChunk);
             Phrase words1 = new Phrase(0, "My Dashboard dada", new Font(bf_helv, 10));
-            Phrase words2 = new Phrase(0, "Created on 15-Jan-2023 12:11 PM NY / 05:11 PM UK", new Font(bf_helv, 8));
+            Phrase words2 = new Phrase(0, "Created on 15-Jan-2023 03:37 PM NY / 08:37 PM UK", new Font(bf_helv, 8));
 
             Cell leftCell = new Cell(logoPhrase);
             leftCell.setHorizontalAlignment(HorizontalAlignment.LEFT);
