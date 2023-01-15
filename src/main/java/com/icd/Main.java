@@ -60,32 +60,18 @@ public class Main {
             leftCell.setHorizontalAlignment(HorizontalAlignment.LEFT);
             leftCell.setVerticalAlignment(VerticalAlignment.CENTER);
             leftCell.setBorderWidth(0);
-            leftCell.setBorder(0);
-//            leftCell.setBackgroundColor(Color.CYAN);
-//            leftCell.disableBorderSide(Cell.LEFT);
-//            leftCell.disableBorderSide(Cell.RIGHT);
-//            leftCell.disableBorderSide(Cell.TOP);
-//            leftCell.disableBorderSide(Cell.BOTTOM);
-            leftCell.setBorderWidth(0);
 
             Cell midCell = new Cell(words1);
             midCell.setHorizontalAlignment(HorizontalAlignment.CENTER);
-//            midCell.setBackgroundColor(Color.LIGHT_GRAY);
             midCell.setVerticalAlignment(VerticalAlignment.CENTER);
-//            midCell.disableBorderSide(Cell.LEFT);
-//            midCell.disableBorderSide(Cell.RIGHT);
-//            midCell.disableBorderSide(Cell.TOP);
-//            midCell.disableBorderSide(Cell.BOTTOM);
             midCell.setBorderWidth(0);
 
             Cell rightCell = new Cell(words2);
             rightCell.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-//            rightCell.setBackgroundColor(Color.YELLOW);
             rightCell.setVerticalAlignment(VerticalAlignment.CENTER);
-//            rightCell.setBorderWidth(0);
             rightCell.setBorderWidth(0);
 
-            Table table = new Table(3, 1);
+            Table table = new Table(3, 2);
             table.setTableFitsPage(true);
             table.setBorder(0);
             table.setPadding(0);
@@ -97,6 +83,11 @@ public class Main {
             table.addCell(midCell, new Point(0,1));
             table.addCell(rightCell, new Point(0,2));
 
+            Cell verticalSpace = new Cell("\n");
+            verticalSpace.setColspan(3);
+            verticalSpace.setBorder(Cell.NO_BORDER);
+            table.addCell(verticalSpace, new Point(1,0));
+
             Phrase headerPhrase = new Phrase(0);
             headerPhrase.add(table);
 
@@ -106,19 +97,9 @@ public class Main {
             header.setBorderWidthBottom(0);
             document.setHeader(header);
 
-//            HeaderFooter footer = new HeaderFooter(
-//                    new Phrase("page: ", new Font(bf_helv)), true);
-//            footer.setBorder(Rectangle.NO_BORDER);
-//            footer.setAlignment(Element.ALIGN_CENTER);
-//            document.setFooter(footer);
-
-
             document.open();
 
             instance.getInfo().put(PdfName.CREATOR, new PdfString(Document.getVersion()));
-
-//            document.add(new Paragraph("Hello World"));
-//            document.add(new Paragraph("screenshot-20230102-22164649-dasher06-mydashboard-false.png"));
 
             Path inputPathPng = Paths.get("input", "screenshot-20230102-22164649-dasher06-mydashboard-false.png");
             Image png = Image.getInstance(inputPathPng.toString());
