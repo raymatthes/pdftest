@@ -49,20 +49,20 @@ public class Main {
             logo.scalePercent(3);
             Chunk logoChunk = new Chunk(logo, 0f, 0f);
             Phrase logoPhrase = new Phrase(0, logoChunk);
-            Phrase words1 = new Phrase(0, "My Dashboard dada", new Font(bf_helv, 10));
-            Phrase words2 = new Phrase(0, "Created on 15-Jan-2023 03:37 PM NY / 08:37 PM UK", new Font(bf_helv, 8));
+            Phrase viewName = new Phrase(0, "My Dashboard dada", new Font(bf_helv, 10));
+            Phrase timestamp = new Phrase(0, "Created on 15-Jan-2023 03:37 PM NY / 08:37 PM UK", new Font(bf_helv, 8));
 
             Cell leftCell = new Cell(logoPhrase);
             leftCell.setHorizontalAlignment(HorizontalAlignment.LEFT);
             leftCell.setVerticalAlignment(VerticalAlignment.CENTER);
             leftCell.setBorderWidth(0);
 
-            Cell midCell = new Cell(words1);
-            midCell.setHorizontalAlignment(HorizontalAlignment.CENTER);
-            midCell.setVerticalAlignment(VerticalAlignment.CENTER);
-            midCell.setBorderWidth(0);
+            Cell middleCell = new Cell(viewName);
+            middleCell.setHorizontalAlignment(HorizontalAlignment.CENTER);
+            middleCell.setVerticalAlignment(VerticalAlignment.CENTER);
+            middleCell.setBorderWidth(0);
 
-            Cell rightCell = new Cell(words2);
+            Cell rightCell = new Cell(timestamp);
             rightCell.setHorizontalAlignment(HorizontalAlignment.RIGHT);
             rightCell.setVerticalAlignment(VerticalAlignment.CENTER);
             rightCell.setBorderWidth(0);
@@ -76,7 +76,7 @@ public class Main {
             table.setWidth(100);
             table.setWidths(new int[]{33,33,34});
             table.addCell(leftCell, new Point(0,0));
-            table.addCell(midCell, new Point(0,1));
+            table.addCell(middleCell, new Point(0,1));
             table.addCell(rightCell, new Point(0,2));
 
             Cell verticalSpace = new Cell("\n");
