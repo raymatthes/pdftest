@@ -21,6 +21,17 @@ import java.nio.file.Paths;
  * @author Ray Matthes
  */
 public class Main {
+
+    public static BaseFont FONT_HELVETICA;
+
+    static {
+        try {
+            FONT_HELVETICA = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void main(String[] args) throws IOException {
 
 //        Rectangle page = PageSize.A4;
@@ -40,102 +51,15 @@ public class Main {
             Path outputPath = Paths.get("output", "20230102-22164649-dasher06-mydashboard-false.pdf");
             final PdfWriter instance = PdfWriter.getInstance(document, Files.newOutputStream(outputPath));
 
-            BaseFont bf_helv = BaseFont.createFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
-
             // headers and footers must be added before the document is opened
 
-            Path inputPathLogo = Paths.get("input", "icd-logo.png");
-            Image logo = Image.getInstance(inputPathLogo.toString());
-            logo.scalePercent(3);
-            Chunk logoChunk = new Chunk(logo, 0f, 0f);
-            Phrase logoPhrase = new Phrase(0, logoChunk);
-
-            Cell left = new Cell(logoPhrase);
-            left.setHorizontalAlignment(HorizontalAlignment.LEFT);
-            left.setVerticalAlignment(VerticalAlignment.CENTER);
-            left.setBorderWidth(2);
-            left.setBorder(Cell.RIGHT);
-            left.setBorderColor(Color.decode("0x009845"));
-
-            Phrase portalPhrase = new Phrase(0, "Portal", new Font(bf_helv, 14));
-            portalPhrase.setLeading(10);
-            Cell middle = new Cell(portalPhrase);
-            middle.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-            middle.setVerticalAlignment(VerticalAlignment.CENTER);
-            middle.setBorderWidth(0);
-
-            Cell right = new Cell("\n");
-            right.setHorizontalAlignment(HorizontalAlignment.LEFT);
-            right.setVerticalAlignment(VerticalAlignment.CENTER);
-            right.setBorderWidth(0);
-
-
-            Table smallTable = new Table(3, 1);
-            smallTable.setPadding(0);
-            smallTable.setBorder(0);
-            smallTable.setSpacing(0);
-            smallTable.setOffset(0);
-            smallTable.setWidth(100);
-            smallTable.setWidths(new float[]{16f, 16.5f, 67.5f});
-            smallTable.addCell(left, new Point(0, 0));
-            smallTable.addCell(middle, new Point(0, 1));
-            smallTable.addCell(right, new Point(0, 2));
-
-
-            Phrase viewName = new Phrase(0, "My Dashboard dada", new Font(bf_helv, 10));
-            Phrase timestamp = new Phrase(0, "Created on 15-Jan-2023 03:37 PM NY / 08:37 PM UK", new Font(bf_helv, 8));
-
-            Cell middleCell = new Cell(viewName);
-            middleCell.setHorizontalAlignment(HorizontalAlignment.CENTER);
-            middleCell.setVerticalAlignment(VerticalAlignment.CENTER);
-            middleCell.setBorderWidth(0);
-
-            Cell rightCell = new Cell(timestamp);
-            rightCell.setHorizontalAlignment(HorizontalAlignment.RIGHT);
-            rightCell.setVerticalAlignment(VerticalAlignment.CENTER);
-            rightCell.setBorderWidth(0);
-
-            Table table = new Table(3, 2);
-            table.setTableFitsPage(true);
-            table.setBorder(0);
-            table.setPadding(0);
-            table.setSpacing(0);
-            table.setOffset(0);
-            table.setWidth(100);
-            table.setWidths(new int[]{33, 34, 33});
-
-            table.insertTable(smallTable, new Point(0, 0));
-            table.addCell(middleCell, new Point(0, 1));
-            table.addCell(rightCell, new Point(0, 2));
-
-            Cell verticalSpace = new Cell("\n");
-            verticalSpace.setColspan(3);
-            verticalSpace.setBorder(Cell.NO_BORDER);
-            table.addCell(verticalSpace, new Point(1, 0));
-
-            Phrase headerPhrase = new Phrase(0);
-            headerPhrase.add(table);
-
-            HeaderFooter header = new HeaderFooter(headerPhrase, false);
-            header.setBorder(Rectangle.NO_BORDER);
-            header.setAlignment(Element.ALIGN_CENTER);
-            header.setBorderWidthBottom(0);
-            document.setHeader(header);
+            Table logoTable = getLogoTable();
+            Table headerTable = getHeaderTable(logoTable);
+            createHeader(document, headerTable);
 
             document.open();
-
-            document.addTitle("ICD Dashboard This is a great title");
-            document.addSubject("ICD Dashboard  This is a great subject");
-            document.addKeywords("ICD Dashboard");
-            document.addCreator("ICD Dashboard, icdportal.com");
-            document.addAuthor("ICD Dashboard ");
-
-            instance.getInfo().put(PdfName.CREATOR, new PdfString(Document.getVersion()));
-
-            Path inputPathPng = Paths.get("input", "screenshot-20230102-22164649-dasher06-mydashboard-false.png");
-            Image png = Image.getInstance(inputPathPng.toString());
-            png.scalePercent(pngScalePercent);
-            document.add(png);
+            createInfo(document, instance);
+            createContent(pngScalePercent, document);
 
         } catch (DocumentException | IOException exception) {
             System.err.println(exception.getMessage());
@@ -143,6 +67,108 @@ public class Main {
 
         document.close();
 
+    }
+
+    private static void createContent(float pngScalePercent, Document document) throws IOException {
+        Path inputPathPng = Paths.get("input", "screenshot-20230102-22164649-dasher06-mydashboard-false.png");
+        Image png = Image.getInstance(inputPathPng.toString());
+        png.scalePercent(pngScalePercent);
+        document.add(png);
+    }
+
+    private static void createInfo(Document document, PdfWriter instance) {
+        document.addTitle("ICD Dashboard This is a great title");
+        document.addSubject("ICD Dashboard  This is a great subject");
+        document.addKeywords("ICD Dashboard");
+        document.addCreator("ICD Dashboard, icdportal.com");
+        document.addAuthor("ICD Dashboard ");
+        instance.getInfo().put(PdfName.CREATOR, new PdfString(Document.getVersion()));
+    }
+
+    private static void createHeader(Document document, Table table) {
+        Phrase headerPhrase = new Phrase(0);
+        headerPhrase.add(table);
+
+        HeaderFooter header = new HeaderFooter(headerPhrase, false);
+        header.setBorder(Rectangle.NO_BORDER);
+        header.setAlignment(Element.ALIGN_CENTER);
+        header.setBorderWidthBottom(0);
+        document.setHeader(header);
+    }
+
+    private static Table getHeaderTable(Table logoTable) {
+        Phrase viewName = new Phrase(0, "My Dashboard dada", new Font(FONT_HELVETICA, 10));
+        Phrase timestamp = new Phrase(0, "Created on 15-Jan-2023 03:37 PM NY / 08:37 PM UK", new Font(FONT_HELVETICA, 8));
+
+        Cell middleCell = new Cell(viewName);
+        middleCell.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        middleCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        middleCell.setBorderWidth(0);
+
+        Cell rightCell = new Cell(timestamp);
+        rightCell.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        rightCell.setVerticalAlignment(VerticalAlignment.CENTER);
+        rightCell.setBorderWidth(0);
+
+        Table headerTable = new Table(3, 2);
+        headerTable.setTableFitsPage(true);
+        headerTable.setBorder(0);
+        headerTable.setPadding(0);
+        headerTable.setSpacing(0);
+        headerTable.setOffset(0);
+        headerTable.setWidth(100);
+        headerTable.setWidths(new int[]{33, 34, 33});
+
+        headerTable.insertTable(logoTable, new Point(0, 0));
+        headerTable.addCell(middleCell, new Point(0, 1));
+        headerTable.addCell(rightCell, new Point(0, 2));
+
+        Cell verticalSpace = new Cell("\n");
+        verticalSpace.setColspan(3);
+        verticalSpace.setBorder(Cell.NO_BORDER);
+        headerTable.addCell(verticalSpace, new Point(1, 0));
+
+        return headerTable;
+    }
+
+    private static Table getLogoTable() throws IOException {
+        Path inputPathLogo = Paths.get("input", "icd-logo.png");
+        Image logoImage = Image.getInstance(inputPathLogo.toString());
+        logoImage.scalePercent(3);
+        Chunk logoChunk = new Chunk(logoImage, 0f, 0f);
+        Phrase logoPhrase = new Phrase(0, logoChunk);
+
+        Cell left = new Cell(logoPhrase);
+        left.setHorizontalAlignment(HorizontalAlignment.LEFT);
+        left.setVerticalAlignment(VerticalAlignment.CENTER);
+        left.setBorderWidth(2);
+        left.setBorder(Cell.RIGHT);
+        left.setBorderColor(Color.decode("0x009845"));
+
+        Phrase portalPhrase = new Phrase(0, "Portal", new Font(FONT_HELVETICA, 14));
+        portalPhrase.setLeading(10);
+        Cell middle = new Cell(portalPhrase);
+        middle.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        middle.setVerticalAlignment(VerticalAlignment.CENTER);
+        middle.setBorderWidth(0);
+
+        Cell right = new Cell("\n");
+        right.setHorizontalAlignment(HorizontalAlignment.LEFT);
+        right.setVerticalAlignment(VerticalAlignment.CENTER);
+        right.setBorderWidth(0);
+
+        Table logoTable = new Table(3, 1);
+        logoTable.setPadding(0);
+        logoTable.setBorder(0);
+        logoTable.setSpacing(0);
+        logoTable.setOffset(0);
+        logoTable.setWidth(100);
+        logoTable.setWidths(new float[]{16f, 16.5f, 67.5f});
+        logoTable.addCell(left, new Point(0, 0));
+        logoTable.addCell(middle, new Point(0, 1));
+        logoTable.addCell(right, new Point(0, 2));
+
+        return logoTable;
     }
 
 }
