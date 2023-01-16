@@ -1,9 +1,9 @@
 package com.icd;
 
-import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
 import com.lowagie.text.Rectangle;
+import com.lowagie.text.*;
 import com.lowagie.text.alignment.HorizontalAlignment;
 import com.lowagie.text.alignment.VerticalAlignment;
 import com.lowagie.text.pdf.BaseFont;
@@ -23,17 +23,17 @@ import java.nio.file.Paths;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        System.out.println("Hello World");
+//        Rectangle page = PageSize.A4;
+//        float pngScalePercent = 21.5f;
+
+        Rectangle page = PageSize.LETTER;
+        float pngScalePercent = 20.1f;
+
+        System.out.println("Start");
 
         // set landscape
-        Document document = new Document(PageSize.LETTER.rotate());
+        Document document = new Document(page.rotate());
         try {
-
-            document.addTitle("ICD Dashboard This is a great title");
-            document.addSubject("ICD Dashboard  This is a great subject");
-            document.addKeywords("ICD Dashboard");
-            document.addCreator("ICD Dashboard, icdportal.com");
-            document.addAuthor("ICD Dashboard ");
 
             // we create a writer that listens to the document
             // and directs a PDF-stream to a file
@@ -124,15 +124,21 @@ public class Main {
 
             document.open();
 
+            document.addTitle("ICD Dashboard This is a great title");
+            document.addSubject("ICD Dashboard  This is a great subject");
+            document.addKeywords("ICD Dashboard");
+            document.addCreator("ICD Dashboard, icdportal.com");
+            document.addAuthor("ICD Dashboard ");
+
             instance.getInfo().put(PdfName.CREATOR, new PdfString(Document.getVersion()));
 
             Path inputPathPng = Paths.get("input", "screenshot-20230102-22164649-dasher06-mydashboard-false.png");
             Image png = Image.getInstance(inputPathPng.toString());
-            png.scalePercent(20);
+            png.scalePercent(pngScalePercent);
             document.add(png);
 
-        } catch (DocumentException | IOException de) {
-            System.err.println(de.getMessage());
+        } catch (DocumentException | IOException exception) {
+            System.err.println(exception.getMessage());
         }
 
         document.close();
