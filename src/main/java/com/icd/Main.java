@@ -49,13 +49,41 @@ public class Main {
             logo.scalePercent(3);
             Chunk logoChunk = new Chunk(logo, 0f, 0f);
             Phrase logoPhrase = new Phrase(0, logoChunk);
+
+            Cell left = new Cell(logoPhrase);
+            left.setHorizontalAlignment(HorizontalAlignment.LEFT);
+            left.setVerticalAlignment(VerticalAlignment.CENTER);
+            left.setBorderWidth(2);
+            left.setBorder(Cell.RIGHT);
+            left.setBorderColor(Color.decode("0x009845"));
+
+            Phrase portalPhrase = new Phrase(0, "Portal", new Font(bf_helv, 14));
+            portalPhrase.setLeading(10);
+            Cell middle = new Cell(portalPhrase);
+            middle.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+            middle.setVerticalAlignment(VerticalAlignment.CENTER);
+            middle.setBorderWidth(0);
+
+            Cell right = new Cell("\n");
+            right.setHorizontalAlignment(HorizontalAlignment.LEFT);
+            right.setVerticalAlignment(VerticalAlignment.CENTER);
+            right.setBorderWidth(0);
+
+
+            Table smallTable = new Table(3, 1);
+            smallTable.setPadding(0);
+            smallTable.setBorder(0);
+            smallTable.setSpacing(0);
+            smallTable.setOffset(0);
+            smallTable.setWidth(100);
+            smallTable.setWidths(new float[]{16f, 16.5f, 67.5f});
+            smallTable.addCell(left, new Point(0, 0));
+            smallTable.addCell(middle, new Point(0, 1));
+            smallTable.addCell(right, new Point(0, 2));
+
+
             Phrase viewName = new Phrase(0, "My Dashboard dada", new Font(bf_helv, 10));
             Phrase timestamp = new Phrase(0, "Created on 15-Jan-2023 03:37 PM NY / 08:37 PM UK", new Font(bf_helv, 8));
-
-            Cell leftCell = new Cell(logoPhrase);
-            leftCell.setHorizontalAlignment(HorizontalAlignment.LEFT);
-            leftCell.setVerticalAlignment(VerticalAlignment.CENTER);
-            leftCell.setBorderWidth(0);
 
             Cell middleCell = new Cell(viewName);
             middleCell.setHorizontalAlignment(HorizontalAlignment.CENTER);
@@ -74,15 +102,16 @@ public class Main {
             table.setSpacing(0);
             table.setOffset(0);
             table.setWidth(100);
-            table.setWidths(new int[]{33,33,34});
-            table.addCell(leftCell, new Point(0,0));
-            table.addCell(middleCell, new Point(0,1));
-            table.addCell(rightCell, new Point(0,2));
+            table.setWidths(new int[]{33, 34, 33});
+
+            table.insertTable(smallTable, new Point(0, 0));
+            table.addCell(middleCell, new Point(0, 1));
+            table.addCell(rightCell, new Point(0, 2));
 
             Cell verticalSpace = new Cell("\n");
             verticalSpace.setColspan(3);
             verticalSpace.setBorder(Cell.NO_BORDER);
-            table.addCell(verticalSpace, new Point(1,0));
+            table.addCell(verticalSpace, new Point(1, 0));
 
             Phrase headerPhrase = new Phrase(0);
             headerPhrase.add(table);
